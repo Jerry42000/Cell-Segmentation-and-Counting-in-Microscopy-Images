@@ -1,7 +1,7 @@
 
 # Cell Segmentation and Counting in Microscopy Images
 
-This repository contains APS360 project code for microscopy-based cell segmentation, including both a classical image-processing baseline and a preliminary deep learning model.
+This repository contains code for microscopy cell segmentation, including a classical image-processing baseline and a preliminary deep learning U-Net model.
 
 ## Files
 
