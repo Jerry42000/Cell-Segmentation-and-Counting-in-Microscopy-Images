@@ -87,23 +87,25 @@ Masks are assumed to be binary foreground/background annotations.
 
 ---
 
-## Final Pipeline
+## Final Model
 
-The final learned pipeline is:
+The final learned flow is:
 
-1. preprocess microscopy image and mask pairs  
-2. train lightweight U-Net for binary cell segmentation  
-3. produce a cell probability map  
-4. threshold and clean the predicted mask  
-5. apply watershed-based instance separation  
-6. trace final boundaries on the original image  
-7. output an approximate cell count
+1. Preprocess microscopy image and mask pairs  
+2. Train U-Net for binary cell segmentation  
+3. Produce a cell probability map  
+4. Threshold and clean the predicted mask  
+5. Apply watershed instance separation  
+6. Trace final boundaries on the original image  
+7. Output an approximate cell count
 
 ---
+### Sample Output Image:
+<img width="1537" height="884" alt="image" src="https://github.com/user-attachments/assets/cb53cfda-670b-48b2-a33c-898a6365ec26" />
 
 ## How to Run
 
-### 1. Train the U-Net
+### Train the U-Net
 ```bash
 python train_unet.py \
   --data_dir /path/to/train_data \
