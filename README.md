@@ -1,34 +1,111 @@
 
 # Cell Segmentation and Counting in Microscopy Images
 
-This repository contains code for microscopy cell segmentation, including a classical image-processing baseline and a preliminary deep learning U-Net model.
+This repository contains the final codebase for binary cell segmentation and counting in fluorescence microscopy images. The project compares a classical watershed baseline against a lightweight U-Net segmentation model, then extends the learned model with post-processing for instance separation, boundary tracing, and approximate cell counting.
 
-## Files
+## Repository Files
 
-- **`baseline_watershed.py`**  
-  Implements a classical watershed baseline for binary cell segmentation using grayscale conversion, Gaussian smoothing, thresholding, morphology, distance transform, and watershed. Saves quantitative metrics and example outputs.
+### `baseline_watershed.py`
+Implements the classical image-processing baseline for binary cell segmentation.  
+Pipeline:
+- grayscale conversion
+- Gaussian smoothing
+- Otsu thresholding
+- morphological cleanup
+- distance transform
+- watershed segmentation
 
-- **`train_unet_quick.py`**  
-  Trains a reduced U-Net prototype for binary cell segmentation. Saves model weights, validation metrics, a learning curve plot, and an example prediction.
+Outputs:
+- quantitative metrics
+- per-image CSV results
+- qualitative example figures
+- traced boundaries and approximate counts
 
-- **`predict_unet_single.py`**  
-  Loads a trained U-Net model and runs inference on one specified sample to generate a qualitative comparison figure.
+### `train_unet.py`
+Trains the final lightweight U-Net model for binary cell segmentation.
 
-## Objective
+Main features:
+- reduced encoder-decoder U-Net backbone
+- BCE + Dice hybrid loss
+- boundary-aware weighting
+- optional target erosion
+- optional augmentation
+- learning-rate scheduling
+- early stopping
+- checkpoint saving
+- validation evaluation during training
+- optional held-out test-set evaluation after training
 
-The goal as of now is to evaluate whether a neural segmentation model can outperform a simple baseline on microscopy images of cells, and implement the preliminary CNN model.
+Outputs:
+- best model weights
+- checkpoint file
+- validation summary
+- optional test summary
+- learning curve
+- qualitative validation/test examples
+
+### `predict_unet.py`
+Runs inference on one specified image-mask pair using a trained U-Net model.
+
+Main features:
+- loads either plain weights or checkpoint dicts
+- produces probability map
+- optional watershed-based instance separation
+- traced boundary overlay
+- final approximate cell count
+- polished multi-panel qualitative figure
+
+### `evaluate_test.py`
+Evaluates a trained U-Net model on a separate unseen test dataset without retraining.
+
+Main features:
+- accepts either a test folder or test ZIP archive
+- computes test IoU, Dice, and pixel accuracy
+- saves per-image metrics
+- can also generate one final qualitative panel for a chosen test sample
+
+---
+
+## Project Objective
+
+The objective of this project is to evaluate whether a lightweight deep learning segmentation model can outperform a classical watershed baseline on microscopy cell images, while also supporting boundary tracing and approximate counting after post-processing.
+
+---
 
 ## Expected Data Format
 
 All scripts assume paired image and mask files of the form:
 
+- `XXX_img.png`
+- `XXX_masks.png`
 
-*XXX_img.png
-*XXX_masks.png
+Example:
+- `000_img.png`
+- `000_masks.png`
 
-for instance:
+Masks are assumed to be binary foreground/background annotations.
 
-*000_img.png
-*005_masks.png
+---
 
-### This page will be updated
+## Final Pipeline
+
+The final learned pipeline is:
+
+1. preprocess microscopy image and mask pairs  
+2. train lightweight U-Net for binary cell segmentation  
+3. produce a cell probability map  
+4. threshold and clean the predicted mask  
+5. apply watershed-based instance separation  
+6. trace final boundaries on the original image  
+7. output an approximate cell count
+
+---
+
+## How to Run
+
+### 1. Train the U-Net
+```bash
+python train_unet.py \
+  --data_dir /path/to/train_data \
+  --out_dir /path/to/output_dir \
+  --use_augmentation
