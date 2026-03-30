@@ -3,6 +3,9 @@
 
 This repository contains the final codebase for binary cell segmentation and counting in fluorescence microscopy images. The project compares a classical watershed baseline against a lightweight U-Net segmentation model, then extends the learned model with post-processing for instance separation, boundary tracing, and approximate cell counting.
 
+### Sample Output Image:
+<img width="1537" height="884" alt="image" src="https://github.com/user-attachments/assets/cb53cfda-670b-48b2-a33c-898a6365ec26" />
+
 ## Repository Files
 
 ### `baseline_watershed.py`
@@ -100,8 +103,6 @@ The final learned flow is:
 7. Output an approximate cell count
 
 ---
-### Sample Output Image:
-<img width="1537" height="884" alt="image" src="https://github.com/user-attachments/assets/cb53cfda-670b-48b2-a33c-898a6365ec26" />
 
 ## How to Run
 
